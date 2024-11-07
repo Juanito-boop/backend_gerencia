@@ -42,3 +42,18 @@ export const SQL_USUARIO = {
 		FROM users 
 		WHERE email = $1 OR username = $2;`,
 };
+export const SQL_EVENTOS = {
+	insertnewevento:`
+	insert into eventos (nombre_evento, descripcion_evento, organizador_evento, lugar_evento, fecha_evento, hora_evento, valor_evento)
+	values ($1, $2,$3, $4, $5, $6, $7)
+
+	returning id_evento`,
+
+	checkEventExist:`
+	SELECT id_evento 
+	FROM eventos 
+	WHERE nombre_evento = $1 
+    AND fecha_evento = $2 
+    AND hora_evento = $3;`
+
+}
