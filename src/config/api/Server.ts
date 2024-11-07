@@ -9,6 +9,7 @@ import rutasUsuario from "../../routes/rutasUsuario";
 import rutasSinMiddleware from "../../routes/rutasSinMiddleware";
 import tokenRuta from "../../routes/TokenRuta";
 import rutasBD from "../../routes/rutasBD";
+import rutasPerfil from "../../routes/rutasPerfil"
 import {
 	formatMethodColor,
 	formatStatusCodeColor,
@@ -80,6 +81,7 @@ class Servidor {
 		this.app.use(`${this.v1}/token`, tokenRuta);
 		this.app.use(`${this.v1}/crearUsuarios`, rutasSinMiddleware);
 		this.app.use(`${this.v1}/usuarios`, seguridad.revisar, rutasUsuario);
+		this.app.use(`${this.v1}/perfiles`, rutasPerfil);
 	}
 
 	public arrancar(): void {

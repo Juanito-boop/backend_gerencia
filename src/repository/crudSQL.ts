@@ -42,3 +42,11 @@ export const SQL_USUARIO = {
 		FROM users 
 		WHERE email = $1 OR username = $2;`,
 };
+
+export const SQL_PERFIL = {
+	fetchUserProfile: `
+		SELECT username, avatar_url, user_id 
+		FROM perfiles 
+		WHERE username = $1;
+	`,
+};

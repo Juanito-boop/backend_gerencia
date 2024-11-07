@@ -12,6 +12,12 @@ export interface User {
 	created_at: Date;
 	updated_at: Date;
 }
+export interface Perfil {
+	id: string;
+	username: string;
+	avatar_url: string;
+	user_id: string;
+}
 
 export interface userData {
 	nombre: string;
@@ -19,6 +25,12 @@ export interface userData {
 	email: string;
 	username: string;
 	password: string;
+	avatar_url: string;
+	rol: Rol;
+}
+export interface perfilData {
+	
+	username: string;
 	avatar_url: string;
 	rol: Rol;
 }
@@ -42,6 +54,9 @@ export interface DataToken {
 
 export interface UsuarioCreationResult {
 	user_id: string;
+}
+export interface PerfilCreationResult {
+	perfil_id: string;
 }
 
 export interface morganToken {
