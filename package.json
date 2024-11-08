@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "tsc -watch",
-		"dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts",
+		"dev": "npx ts-node src/index.ts",
 		"start": "node build/index.js"
 	},
 	"keywords": [

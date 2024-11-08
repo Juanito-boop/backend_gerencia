@@ -1,10 +1,9 @@
 import { Router } from "express";
-
-import UsuarioController from "../controllers/usuarioController";
+import PerfilController from "../controllers/perfilController";
 import cacheMiddleware from "../middleware/Cache";
 import seguridad from "../middleware/Seguridad";
 
-class Rutas {
+class PerfilRutas {
 	public rutasApi: Router;
 
 	constructor() {
@@ -15,21 +14,16 @@ class Rutas {
 	public config() {
 		this.rutas();
 	}
+
 	public rutas() {
-		// /api/v1/public/usuarios
+		// /api/v1/public/perfiles/:username
 		this.rutasApi.get(
 			"/:username",
 			cacheMiddleware(),
-			seguridad.checkRole([
-				"administrador",
-				"usuario",
-				"establecimiento",
-				"proveedor",
-			]),
-			UsuarioController.fetchUser
+			PerfilController.fetchUserProfile
 		);
 	}
 }
 
-const misRutas = new Rutas();
-export default misRutas.rutasApi;
+const perfilRutas = new PerfilRutas();
+export default perfilRutas.rutasApi;
