@@ -1,4 +1,4 @@
-import pool from "../config/connection/conexion";
+import { pool } from "../config/connection/conexion";
 import { SQL_EVENTOS } from "../repository/crudSQL";
 import Result from "../utils/Result";
 import { Event, EventoCreationResult } from "../interface/interfazEvento";
