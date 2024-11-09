@@ -87,12 +87,10 @@ class Servidor {
 		this.app.use(`${this.v1}/token`, tokenRuta);
 		this.app.use(`${this.v1}/crearUsuario`, rutasSinMiddleware);
 		this.app.use(`${this.v1}/usuarios`,seguridad.revisar,rutasUsuario);
+		this.app.use(`${this.v1}/eventos`, seguridad.revisar, rutasEventos)
 
 		// documentación
 		this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
-		this.app.use(`${this.v1}/crearUsuarios`, rutasSinMiddleware);
-		this.app.use(`${this.v1}/usuarios`, seguridad.revisar, rutasUsuario);
-		this.app.use(`${this.v1}/eventos`, seguridad.revisar, rutasEventos)
 	}
 
 	public arrancar(): void {
