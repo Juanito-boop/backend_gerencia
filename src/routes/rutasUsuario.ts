@@ -28,6 +28,11 @@ class Rutas {
 			]),
 			UsuarioController.fetchUser
 		);
+		this.rutasApi.delete(
+			"/:username",
+			seguridad.checkRole(["administrador"]),
+			UsuarioController.deleteUser
+		);
 	}
 }
 

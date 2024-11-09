@@ -1,4 +1,4 @@
-import pool from "../config/connection/conexion";
+import { pool } from "../config/connection/conexion";
 import { User, UsuarioCreationResult } from "../interface/interfaces";
 import { SQL_USUARIO } from "../repository/crudSQL";
 import Result from "../utils/Result";
@@ -31,7 +31,6 @@ export default class UsuarioDAO {
 						data.email,
 						data.username,
 						data.password,
-						data.avatar_url,
 						data.rol,
 					]
 				);
@@ -63,6 +62,15 @@ export default class UsuarioDAO {
 			throw new Error(
 				`Error al actualizar el timestamp de login: ${error.message}`
 			);
+		}
+	}
+
+	public static async deleteUser(username: string): Promise<void> {
+		try {
+			const query = `DELETE FROM users WHERE username = $1;`;
+			await pool.none(query, username);
+		} catch (error: any) {
+			throw new Error(`Error al eliminar el usuario: ${error.message}`);
 		}
 	}
 }

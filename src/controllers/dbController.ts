@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../config/connection/conexion";
+import { pool } from "../config/connection/conexion";
 
 class dbController {
 	public async createTables(req: Request, res: Response): Promise<void> {

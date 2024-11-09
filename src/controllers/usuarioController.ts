@@ -6,7 +6,7 @@ import Result from "../utils/Result";
 
 class usuarioController {
 	public async insertUser(req: Request, res: Response) {
-		const { nombre, apellido, email, username, password, avatar_url, rol } =
+		const { nombre, apellido, email, username, password, rol } =
 			req.body;
 
 		const fieldsToValidate = [
@@ -15,7 +15,6 @@ class usuarioController {
 			{ name: "email", value: email, type: "string" },
 			{ name: "username", value: username, type: "string" },
 			{ name: "password", value: password, type: "string" },
-			{ name: "avatar_url", value: avatar_url, type: "string" },
 			{ name: "rol", value: rol, type: "string" },
 		];
 
@@ -39,7 +38,6 @@ class usuarioController {
 				email,
 				username,
 				password: hashedPassword,
-				avatar_url,
 				rol,
 			};
 
@@ -68,8 +66,7 @@ class usuarioController {
 
 		try {
 			const insertions = users.map(async (user) => {
-				const { nombre, apellido, email, username, password, avatar_url, rol } =
-					user;
+				const { nombre, apellido, email, username, password, rol } = user;
 
 				if (!password) {
 					throw new Error(
@@ -85,7 +82,6 @@ class usuarioController {
 					email,
 					username,
 					password: hashedPassword,
-					avatar_url,
 					rol,
 				};
 
@@ -95,7 +91,6 @@ class usuarioController {
 			const results = await Promise.all(insertions);
 			const failed = results.filter((result) => !result.isSuccess);
 			const successful = results.filter((result) => result.isSuccess);
-			const insertedIds = successful.map((result) => result.getValue().user_id);
 
 			if (failed.length > 0) {
 				res
@@ -105,7 +100,6 @@ class usuarioController {
 				res.status(200).json({
 					mensaje: "Todos los usuarios insertados exitosamente",
 					cantidad: successful.length,
-					ids: insertedIds,
 				});
 			}
 		} catch (error: any) {
@@ -145,6 +139,26 @@ class usuarioController {
 			res
 				.status(500)
 				.json({ mensaje: `Error al obtener el usuario: ${error.message}` });
+		}
+	}
+
+	public async deleteUser(req: Request, res: Response): Promise<void> {
+		const requestedUsername: string = req.params.username;
+		const loggedInUser = (req as any).user.username;
+
+		try {
+			if (requestedUsername === loggedInUser) {
+				await UsuarioDAO.deleteUser(requestedUsername);
+				res.status(204).json({ mensaje: "Usuario eliminado exitosamente" });
+			} else {
+				res.status(403).json({
+					mensaje: "No tienes permiso para eliminar este usuario",
+				});
+			}
+		} catch (error: any) {
+			res
+				.status(500)
+				.json({ mensaje: `Error al eliminar el usuario: ${error.message}` });
 		}
 	}
 }

@@ -30,11 +30,15 @@ export const SQL_USUARIO = {
 		JOIN roles ON users.rol = roles.id_rol;`,
 
 	insertUser: `
-		INSERT INTO users 
-			(nombre, apellido, email, username, password, avatar_url, rol, created_at) 
-		VALUES 
-			($1, $2, $3, $4, $5, $6, $7::rol_enum, CURRENT_TIMESTAMP) 
-		RETURNING user_id;`,
+		WITH new_user AS (
+			INSERT INTO users (nombre, apellido, email, username, password, rol, created_at)
+			VALUES ($1, $2, $3, $4, $5, $6::rol_enum, CURRENT_TIMESTAMP)
+			RETURNING user_id
+		)
+			
+		INSERT INTO perfiles (username, avatar_url, user_id)
+			VALUES ($4, '', (SELECT user_id FROM new_user))
+		RETURNING id;`,
 
 	checkUserExists: `
 		SELECT 

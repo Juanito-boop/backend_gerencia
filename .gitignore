@@ -3,6 +3,6 @@
 .idea
 .idx
 .vscode
-/build
 /node_modules
+api.yml
 structure.json

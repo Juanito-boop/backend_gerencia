@@ -2,6 +2,8 @@ import cors from "cors";
 import { config } from "dotenv";
 import express from "express";
 import morgan from "morgan";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
 import seguridad from "../../middleware/Seguridad";
 
@@ -15,6 +17,7 @@ import {
 	formatTimeColor,
 } from "./methods";
 import { morganToken } from "../../interface/interfaces";
+import { connectToDatabase } from "../connection/conexion";
 
 const tokens: morganToken[] = [
 	{
@@ -38,6 +41,7 @@ class Servidor {
 	public app: express.Application;
 	public port: string;
 	public v1: string = "/api/v1/public";
+	public swaggerDocument = YAML.load("./api.yml");
 
 	constructor() {
 		this.app = express();
@@ -45,6 +49,7 @@ class Servidor {
 		this.port = process.env.SERVER_PORT || "8080";
 		this.iniciarConfig();
 		this.activarRutas();
+		connectToDatabase();
 	}
 
 	private iniciarConfig(): void {
@@ -55,7 +60,7 @@ class Servidor {
 
 		this.app.use(
 			morgan(
-				`:colored-method \x1b[37m:url\x1b[0m :colored-status-code :colored-response-time`
+				`:colored-method \x1b[37m:url\x1b[0m :colored-status-code \x1b[37m:response-time\x1b[0m`
 			)
 		);
 
@@ -76,10 +81,14 @@ class Servidor {
 			next();
 		});
 
+		// api
 		this.app.use(`${this.v1}/db`, rutasBD);
 		this.app.use(`${this.v1}/token`, tokenRuta);
-		this.app.use(`${this.v1}/crearUsuarios`, rutasSinMiddleware);
-		this.app.use(`${this.v1}/usuarios`, seguridad.revisar, rutasUsuario);
+		this.app.use(`${this.v1}/crearUsuario`, rutasSinMiddleware);
+		this.app.use(`${this.v1}/usuarios`,seguridad.revisar,rutasUsuario);
+
+		// documentación
+		this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
 	}
 
 	public arrancar(): void {

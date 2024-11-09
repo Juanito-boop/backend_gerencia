@@ -7,16 +7,21 @@ const pgp = pgPromise(opcionesPG);
 const pool = pgp(variablesConexion);
 const dbname = variablesConexion.database;
 
-pool
-	.connect()
-	.then((conn) => {
-		console.log("Conexion exitosa con DB: ", dbname);
+async function connectToDatabase() {
+	try {
+		const conn = await pool.connect();
+		console.log("Conexión exitosa con DB:", dbname);
 		conn.done();
-	})
-	.catch((error) => {
+		return Result.success(`Conectado a la base de datos: ${dbname}`);
+	} catch (error: any) {
 		return Result.fail(
 			`Error al conectar con la base de datos: ${error.message}`
 		);
-	});
+	}
+}
 
-export default pool;
+function closePool() {
+	pgp.end();
+}
+
+export { pool, connectToDatabase, closePool };

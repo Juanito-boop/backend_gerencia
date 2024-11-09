@@ -7,7 +7,6 @@ export interface User {
 	email: string;
 	username: string;
 	password: string;
-	avatar_url: string;
 	rol: Rol;
 	created_at: Date;
 	updated_at: Date;
@@ -19,7 +18,6 @@ export interface userData {
 	email: string;
 	username: string;
 	password: string;
-	avatar_url: string;
 	rol: Rol;
 }
 

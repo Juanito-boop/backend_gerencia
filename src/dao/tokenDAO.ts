@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import Jwt from "jsonwebtoken";
-import pool from "../config/connection/conexion";
+import { pool } from "../config/connection/conexion";
 import { DataToken, Token } from "../interface/interfaces";
 import { SQL_TOKEN } from "../repository/crudSQL";
 import Result from "../utils/Result";
