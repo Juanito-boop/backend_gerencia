@@ -6,8 +6,7 @@ import Result from "../utils/Result";
 
 class usuarioController {
 	public async insertUser(req: Request, res: Response) {
-		const { nombre, apellido, email, username, password, rol } =
-			req.body;
+		const { nombre, apellido, email, username, password, rol } = req.body;
 
 		const fieldsToValidate = [
 			{ name: "nombre", value: nombre, type: "string" },
@@ -159,6 +158,35 @@ class usuarioController {
 			res
 				.status(500)
 				.json({ mensaje: `Error al eliminar el usuario: ${error.message}` });
+		}
+	}
+
+	public async updatePassword(req: Request, res: Response) {
+		const { username, newPassword } = req.body;
+
+		// Validación de datos
+		if (!newPassword || typeof newPassword !== "string") {
+			return res
+				.status(400)
+				.json("Error: Tipo de dato incorrecto para el campo 'newPassword'");
+		}
+
+		try {
+			const result = await UsuarioDAO.updateUserPassword(username, newPassword);
+			if (result.isSuccess) {
+				return res
+					.status(200)
+					.json({
+						mensaje: "Contraseña actualizada exitosamente",
+						user_id: result.getValue().user_id,
+					});
+			} else {
+				return res.status(400).json({ error: result.errorValue() });
+			}
+		} catch (error: any) {
+			return res
+				.status(500)
+				.json(`Error al actualizar la contraseña: ${error.message}`);
 		}
 	}
 }

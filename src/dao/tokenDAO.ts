@@ -33,7 +33,9 @@ export default class tokenDAO {
 		username: string
 	): Promise<Result<{ password: string }>> {
 		try {
-			const result = await pool.one(SQL_TOKEN.getUserCredentials, [username]);
+			const result = await pool.oneOrNone(SQL_TOKEN.getUserCredentials, [
+				username,
+			]);
 			return Result.success(result);
 		} catch (error: any) {
 			return Result.fail(

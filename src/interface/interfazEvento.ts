@@ -1,10 +1,11 @@
 export interface Event {
+  id_evento: number,
   nombre_evento: string,
   descripcion_evento: string,
   organizador_evento: string,
   lugar_evento:string,
   fecha_evento: Date,
-  hora_evento: string,
+  hora_evento: Date,
   valor_evento: number
 }
 

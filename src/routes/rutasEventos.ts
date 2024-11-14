@@ -16,7 +16,9 @@ class Rutas {
 	}
 	public rutas() {
 		// /api/v1/public/eventos
-		this.rutasApi.post("/", cacheMiddleware, EventoController.insertEvent)
+		this.rutasApi.post("/", EventoController.insertEvent);
+		this.rutasApi.get("/", EventoController.fetchAllEvents);
+		this.rutasApi.get("/:id_evento", EventoController.fetchEvent);
 	}
 }
 

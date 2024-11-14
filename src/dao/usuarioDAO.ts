@@ -1,6 +1,7 @@
 import { pool } from "../config/connection/conexion";
 import { User, UsuarioCreationResult } from "../interface/interfaces";
 import { SQL_USUARIO } from "../repository/crudSQL";
+import bcrypt from "bcrypt";
 import Result from "../utils/Result";
 
 export default class UsuarioDAO {
@@ -45,7 +46,10 @@ export default class UsuarioDAO {
 
 	public static async getUser(username: string): Promise<Result<User>> {
 		try {
-			const result: User = await pool.one(SQL_USUARIO.fetchUser, username);
+			const result: User = await pool.oneOrNone(
+				SQL_USUARIO.fetchUser,
+				username
+			);
 			return Result.success(result);
 		} catch (error) {
 			return Result.fail(`No se puede obtener los usuarios, ${error}`);
@@ -71,6 +75,24 @@ export default class UsuarioDAO {
 			await pool.none(query, username);
 		} catch (error: any) {
 			throw new Error(`Error al eliminar el usuario: ${error.message}`);
+		}
+	}
+
+	public static async updateUserPassword(
+		username: string,
+		newPassword: string
+	): Promise<Result<{ user_id: string }>> {
+		try {
+			const saltRounds = 10;
+			const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+			const result = await pool.oneOrNone(SQL_USUARIO.updateUserPassword, [
+				hashedPassword,
+				username,
+			]);
+			return Result.success({ user_id: result.user_id });
+		} catch (error: any) {
+			return Result.fail(`Error al actualizar la contraseña: ${error.message}`);
 		}
 	}
 }

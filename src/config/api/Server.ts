@@ -11,7 +11,10 @@ import rutasUsuario from "../../routes/rutasUsuario";
 import rutasSinMiddleware from "../../routes/rutasSinMiddleware";
 import tokenRuta from "../../routes/TokenRuta";
 import rutasBD from "../../routes/rutasBD";
-import rutasEventos from "../../routes/rutasEventos"
+import rutasEventos from "../../routes/rutasEventos";
+import rutasLugares from "../../routes/rutasLugares";
+import rutasPerfil from "../../routes/rutasPerfil";
+
 import {
 	formatMethodColor,
 	formatStatusCodeColor,
@@ -82,12 +85,14 @@ class Servidor {
 			next();
 		});
 
-		// api
-		this.app.use(`${this.v1}/db`, rutasBD);
-		this.app.use(`${this.v1}/token`, tokenRuta);
-		this.app.use(`${this.v1}/crearUsuario`, rutasSinMiddleware);
-		this.app.use(`${this.v1}/usuarios`,seguridad.revisar,rutasUsuario);
-		this.app.use(`${this.v1}/eventos`, seguridad.revisar, rutasEventos)
+		// endpoints
+		this.app.use(`${this.v1}/db`,																		rutasBD);
+		this.app.use(`${this.v1}/token`,															tokenRuta);
+		this.app.use(`${this.v1}/crearUsuario`,							 rutasSinMiddleware);
+		this.app.use(`${this.v1}/usuarios`    ,	seguridad.revisar, rutasUsuario);
+		this.app.use(`${this.v1}/eventos`     ,	seguridad.revisar, rutasEventos);
+		this.app.use(`${this.v1}/lugares`     ,	seguridad.revisar, rutasLugares);
+		this.app.use(`${this.v1}/perfiles`    ,	seguridad.revisar,  rutasPerfil);
 
 		// documentación
 		this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));

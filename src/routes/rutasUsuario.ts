@@ -20,18 +20,19 @@ class Rutas {
 		this.rutasApi.get(
 			"/:username",
 			cacheMiddleware(),
-			seguridad.checkRole([
-				"administrador",
-				"usuario",
-				"establecimiento",
-				"proveedor",
-			]),
 			UsuarioController.fetchUser
 		);
+
 		this.rutasApi.delete(
 			"/:username",
 			seguridad.checkRole(["administrador"]),
 			UsuarioController.deleteUser
+		);
+
+		this.rutasApi.put(
+			"/:username/change-password",
+			seguridad.revisar,
+			UsuarioController.updatePassword
 		);
 	}
 }
