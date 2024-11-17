@@ -2,7 +2,6 @@
 .devcontainer
 .idea
 .idx
-.vscode
 /node_modules
 api.yml
 structure.json
