@@ -16,10 +16,10 @@ export default class tokenDAO {
 				return Result.fail("No se encontraron registros");
 			}
 
-			const { username, rol } = result.rows[0] as DataToken;
+			const { user_id, username, rol } = result.rows[0] as DataToken;
 			const secretKey = process.env.JWT_SECRET_KEY || "LaSuperClave";
 
-			const token = Jwt.sign({ username, rol }, secretKey, {
+			const token = Jwt.sign({ user_id, username, rol }, secretKey, {
 				expiresIn: "1d",
 			});
 

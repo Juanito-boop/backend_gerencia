@@ -90,7 +90,7 @@ class Servidor {
 		this.app.use(`${this.v1}/token`,															tokenRuta);
 		this.app.use(`${this.v1}/crearUsuario`,							 rutasSinMiddleware);
 		this.app.use(`${this.v1}/usuarios`    ,	seguridad.revisar, rutasUsuario);
-		this.app.use(`${this.v1}/eventos`     ,	seguridad.revisar, rutasEventos);
+		this.app.use(`${this.v1}/eventos`     , seguridad.revisar, rutasEventos);
 		this.app.use(`${this.v1}/lugares`     ,	seguridad.revisar, rutasLugares);
 		this.app.use(`${this.v1}/perfiles`    ,	seguridad.revisar,  rutasPerfil);
 

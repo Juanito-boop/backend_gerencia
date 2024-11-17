@@ -46,7 +46,7 @@ export default class UsuarioDAO {
 
 	public static async getUser(username: string): Promise<Result<User>> {
 		try {
-			const result: User = await pool.oneOrNone(
+			const result: User = await pool.one(
 				SQL_USUARIO.fetchUser,
 				username
 			);

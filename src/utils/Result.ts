@@ -2,7 +2,7 @@ class Result<T, E = string> {
 	public isSuccess: boolean;
 	public isFailure: boolean;
 	public error: E | null;
-	private value: T | null;
+	private value: T | undefined;
 
 	private constructor(isSuccess: boolean, error?: E, value?: T) {
 		if (isSuccess && error) {
@@ -15,7 +15,7 @@ class Result<T, E = string> {
 		this.isSuccess = isSuccess;
 		this.isFailure = !isSuccess;
 		this.error = error || null;
-		this.value = value || null;
+		this.value = value || undefined;
 	}
 
 	public getValue(): T {

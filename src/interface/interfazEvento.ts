@@ -6,7 +6,9 @@ export interface Event {
   lugar_evento:string,
   fecha_evento: Date,
   hora_evento: Date,
-  valor_evento: number
+  valor_evento: number,
+  id_usuario: string,
+  id_lugar: string
 }
 
 export interface EventoCreationResult {

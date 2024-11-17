@@ -34,6 +34,7 @@ export interface Token {
 }
 
 export interface DataToken {
+	user_id: string;
 	username: string;
 	rol: string;
 }

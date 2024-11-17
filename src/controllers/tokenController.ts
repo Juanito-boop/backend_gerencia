@@ -29,9 +29,9 @@ class tokenController {
 			]);
 
 			if (tokenResult.isSuccess) {
-				res.status(200).json(tokenResult.getValue());
+				res.status(200).json({ token: tokenResult.getValue() });
 			} else {
-				res.status(400).json(tokenResult.errorValue());
+				res.status(400).json({token_error: tokenResult.errorValue()});
 			}
 		} catch (error: any) {
 			res

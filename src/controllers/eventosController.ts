@@ -13,7 +13,10 @@ class eventosController {
 			fecha_evento,
 			hora_evento,
 			valor_evento,
+			id_usuario,
+			id_lugar
 		} = req.body;
+		console.log(req.body);
 
 		// Validación de tipos de datos
 		const fieldsToValidate = [
@@ -24,6 +27,8 @@ class eventosController {
 			{ name: "fecha_evento"      , value: fecha_evento      , type: "string" },
 			{ name: "hora_evento"       , value: hora_evento       , type: "string" },
 			{ name: "valor_evento"      , value: valor_evento      , type: "number" },
+			{ name: "id_usuario"        , value: id_usuario        , type: "string" },
+			{ name: "id_lugar"          , value: id_lugar          , type: "string" },
 		];
 
 		const invalidField = fieldsToValidate.find(
@@ -47,6 +52,8 @@ class eventosController {
 				fecha_evento,
 				hora_evento,
 				valor_evento,
+				id_usuario,
+				id_lugar
 			};
 
 			const result: Result<EventoCreationResult, string> =

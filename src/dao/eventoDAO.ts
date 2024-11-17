@@ -31,7 +31,7 @@ export default class eventoDAO {
 		data: Omit<Event, "id_evento">
 	): Promise<Result<EventoCreationResult>> {
 		try {
-			const result: EventoCreationResult = await pool.oneOrNone(
+			const result: EventoCreationResult = await pool.one(
 				SQL_EVENTOS.addNewEvent,
 				[
 					data.nombre_evento,
@@ -41,6 +41,8 @@ export default class eventoDAO {
 					data.fecha_evento,
 					data.hora_evento,
 					data.valor_evento,
+					data.id_usuario,
+					data.id_lugar,
 				]
 			);
 			return Result.success({ id_evento: result.id_evento });
@@ -54,7 +56,7 @@ export default class eventoDAO {
 
 	public static async getEvent(id_evento: number): Promise<Result<Event>> {
 		try {
-			const result: Event = await pool.oneOrNone(
+			const result: Event = await pool.one(
 				SQL_EVENTOS.getEvent,
 				id_evento
 			);

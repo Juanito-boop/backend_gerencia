@@ -18,9 +18,10 @@ class PerfilRutas {
 		// /api/v1/public/perfiles/:username
 		this.rutasApi.get(
 			"/:username",
-			cacheMiddleware(),
 			perfilController.getUserProfile
 		);
+
+		this.rutasApi.patch("/:username", perfilController.updateUserProfile);
 	}
 }
 

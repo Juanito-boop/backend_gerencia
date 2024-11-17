@@ -8,12 +8,25 @@ export default class perfilDAO {
 		username: string
 	): Promise<Result<Perfil, string>> {
 		try {
-			const result = await pool.query(SQL_PERFILES.fetchUserProfile, [
+			const result = await pool.one(SQL_PERFILES.fetchUserProfile, [
 				username,
 			]);
 			return Result.success(result);
 		} catch (error) {
 			return Result.fail(`No se puede obtener el perfil del usuario, ${error}`);
+		}
+	}
+
+	public static async updateUserProfile(username: string, url: string){
+		try {
+			const result = await pool.one(SQL_PERFILES.addUrlImage, [
+				username,
+				url
+			])
+
+			return Result.success(result);
+		} catch (error) {
+			return Result.fail(`No se puede cambiar la imagen de perfil del usuario, ${error}`);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 export const SQL_TOKEN = {
 	getUserToken: `
 	  SELECT 
+			user_id,
 			username, 
 			rol 
 	  FROM users 
@@ -62,8 +63,10 @@ export const SQL_EVENTOS = {
 			lugar_evento, 
 			fecha_evento, 
 			hora_evento, 
-			valor_evento
-		) values ($1, $2, $3, $4, $5, $6, $7)
+			valor_evento,
+			id_usuario,
+			id_lugar
+		) values ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 		returning id_evento`,
 
 	checkIfEventExists: `
@@ -139,6 +142,7 @@ export const SQL_LUGARES = {
 export const SQL_PERFILES = {
 	fetchUserProfile: `
 		SELECT
+			u.user_id,
 			p.username,
 			p.avatar_url,
 			u.nombre,
@@ -148,5 +152,10 @@ export const SQL_PERFILES = {
 		FROM
 			perfiles p
 			INNER JOIN users u on p.user_id = u.user_id
-		WHERE ( u.username = $1 OR p.username = $1 )`,
+		WHERE u.username = $1 AND p.username = $1`,
+
+		addUrlImage: `
+		UPDATE perfiles
+			SET avatar_url = $2
+		WHERE username = $1`
 };
