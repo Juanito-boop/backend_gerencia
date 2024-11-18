@@ -4,7 +4,7 @@
 	"main": "index.js",
 	"scripts": {
 		"build": "tsc -watch",
-		"dev": "npx ts-node src/index.ts",
+		"dev": "npx nodemon src/index.ts",
 		"start": "node build/index.js",
 		"test": "jest --detectOpenHandles"
 	},
@@ -44,7 +44,7 @@
 		"@types/yamljs": "^0.2.34",
 		"dotenv": "^16.4.5",
 		"jest": "^29.7.0",
-		"nodemon": "3.0.1",
+		"nodemon": "^3.0.1",
 		"ts-jest": "^29.2.5",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.6.3"

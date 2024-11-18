@@ -86,13 +86,13 @@ class Servidor {
 		});
 
 		// endpoints
-		this.app.use(`${this.v1}/db`,																		rutasBD);
-		this.app.use(`${this.v1}/token`,															tokenRuta);
-		this.app.use(`${this.v1}/crearUsuario`,							 rutasSinMiddleware);
-		this.app.use(`${this.v1}/usuarios`    ,	seguridad.revisar, rutasUsuario);
-		this.app.use(`${this.v1}/eventos`     , seguridad.revisar, rutasEventos);
-		this.app.use(`${this.v1}/lugares`     ,	seguridad.revisar, rutasLugares);
-		this.app.use(`${this.v1}/perfiles`    ,	seguridad.revisar,  rutasPerfil);
+		this.app.use(`${this.v1}/db`, rutasBD);
+		this.app.use(`${this.v1}/token`, tokenRuta);
+		this.app.use(`${this.v1}/crearUsuario`, rutasSinMiddleware);
+		this.app.use(`${this.v1}/usuarios`, seguridad.revisar, rutasUsuario);
+		this.app.use(`${this.v1}/eventos`, seguridad.revisar, rutasEventos);
+		this.app.use(`${this.v1}/lugares`, seguridad.revisar, rutasLugares);
+		this.app.use(`${this.v1}/perfiles`, seguridad.revisar, rutasPerfil);
 
 		// documentación
 		this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
