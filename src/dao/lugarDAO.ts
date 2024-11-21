@@ -9,9 +9,9 @@ export default class lugarDAO {
 	): Promise<Result<LugarCreationResult, string>> {
 		try {
 			const existingLugar = await pool.oneOrNone(SQL_LUGARES.checkLugarExists, [
-				data.nombreLugar,
-				data.direccionLugar,
-				data.aforoTotalLugar,
+				data.nombrelugar,
+				data.direccionlugar,
+				data.aforototallugar,
 			]);
 
 			if (existingLugar) {
@@ -33,9 +33,9 @@ export default class lugarDAO {
 		try {
 			// Asegurarse de capturar el ID devuelto
 			const result = await pool.oneOrNone(SQL_LUGARES.addNewLugar, [
-				data.nombreLugar,
-				data.direccionLugar,
-				data.aforoTotalLugar,
+				data.nombrelugar,
+				data.direccionlugar,
+				data.aforototallugar,
 			]);
 			return Result.success({ id_lugar: result.id_lugar });
 		} catch (error: any) {
@@ -61,12 +61,44 @@ export default class lugarDAO {
 	public static async getAllLugares() {
 		try {
 			const result = await pool.manyOrNone(SQL_LUGARES.getAllLugares);
-			return Result.success(result);
+			return Result.success(result || []);
 		} catch (error: any) {
 			console.error(
 				`Error al obtener lugares de la base de datos: ${error.message}`
 			);
 			return Result.fail(`No se puede obtener los lugares: ${error.message}`);
+		}
+	}
+
+	public static async updateLugar(
+		id_lugar: string,
+		data: Omit<Lugar, "id_lugar">
+	) {
+		try {
+			const result = await pool.query(SQL_LUGARES.updateLugar, [
+				id_lugar,
+				data.nombrelugar,
+				data.direccionlugar,
+				data.aforototallugar,
+			]);
+			return Result.success(result);
+		} catch (error: any) {
+			console.error(
+				`Error al actualizar lugar en la base de datos: ${error.message}`
+			);
+			return Result.fail(`No se puede actualizar el lugar: ${error.message}`);
+		}
+	}
+
+	public static async deleteLugar(id_lugar: string) {
+		try {
+			const result = await pool.query(SQL_LUGARES.deleteLugar, [id_lugar]);
+			return Result.success(result);
+		} catch (error: any) {
+			console.error(
+				`Error al eliminar lugar en la base de datos: ${error.message}`
+			);
+			return Result.fail(`No se puede eliminar el lugar: ${error.message}`);
 		}
 	}
 }

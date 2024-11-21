@@ -1,8 +1,8 @@
 export interface Lugar {
 	id_lugar: string;
-	nombreLugar: string;
-	direccionLugar: string;
-	aforoTotalLugar: number;
+	nombrelugar: string;
+	direccionlugar: string;
+	aforototallugar: number;
 }
 
 export interface LugarCreationResult {

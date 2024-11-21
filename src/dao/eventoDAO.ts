@@ -14,7 +14,9 @@ export default class eventoDAO {
 			);
 
 			if (existingEvent) {
-				return Result.fail("El evento ya existe.");
+				return Result.fail(
+					`Ya existe un evento con el nombre "${data.nombre_evento}" en la fecha y hora especificada.`
+				);
 			}
 
 			const result = await this.insertEvent(data);
@@ -43,6 +45,8 @@ export default class eventoDAO {
 					data.valor_evento,
 					data.id_usuario,
 					data.id_lugar,
+					data.fecha_finalizacion,
+					data.hora_finalizacion,
 				]
 			);
 			return Result.success({ id_evento: result.id_evento });
@@ -56,22 +60,65 @@ export default class eventoDAO {
 
 	public static async getEvent(id_evento: number): Promise<Result<Event>> {
 		try {
-			const result: Event = await pool.one(
-				SQL_EVENTOS.getEvent,
-				id_evento
-			);
+			const result: Event | null = await pool.oneOrNone(SQL_EVENTOS.getEvent, [
+				id_evento,
+			]);
+
+			if (!result) {
+				return Result.fail(`El evento con id_evento ${id_evento} no existe.`);
+			}
+
 			return Result.success(result);
-		} catch (error) {
-			return Result.fail(`No se puede obtener los eventos, ${error}`);
+		} catch (error: any) {
+			console.error(`Error al obtener el evento: ${error.message}`);
+			return Result.fail(`No se puede obtener el evento, ${error.message}`);
 		}
 	}
 
-	public static async getEvents() {
+	public static async getEvents(): Promise<Result<Event[]>> {
 		try {
 			const result: Event[] = await pool.manyOrNone(SQL_EVENTOS.getAllEvents);
+			
+			return Result.success(result || []);
+			
+		} catch (error: any) {
+			console.error(`Error al obtener los eventos: ${error.message}`);
+			return Result.fail(`No se pueden obtener los eventos, ${error.message}`);
+		}
+	}
+
+	public static async updateEvent(id_evento: number, data: Event) {
+		console.log(data);
+		try {
+			const { nombre_evento, descripcion_evento, organizador_evento, lugar_evento, fecha_evento, hora_evento, valor_evento, id_usuario, id_lugar, fecha_finalizacion, hora_finalizacion } = data;
+			const result = await pool.oneOrNone(SQL_EVENTOS.editEvent, [
+				id_evento,
+				nombre_evento,
+				descripcion_evento,
+				organizador_evento,
+				lugar_evento,
+				fecha_evento,
+				hora_evento,
+				valor_evento,
+				id_usuario,
+				id_lugar,
+				fecha_finalizacion,
+				hora_finalizacion,
+			]);
 			return Result.success(result);
-		} catch (error) {
-			return Result.fail(`No se puede obtener los eventos, ${error}`);
+		} catch (error: any) {
+			console.error(`Error al actualizar el evento: ${error.message}`);
+			return Result.fail(`No se puede actualizar el evento, ${error.message}`);
+		}
+	}
+
+	public static async deleteEvent(id_evento: number) {
+		try {
+			const result = await pool.oneOrNone(SQL_EVENTOS.deleteEvent, [id_evento]);
+			return Result.success(result);
+		} catch (error: any) {
+			console.error(`Error al eliminar el evento: ${error.message}`);
+			return Result.fail(`No se puede eliminar el evento, ${error.message}`);
 		}
 	}
 }

@@ -45,7 +45,7 @@ class Servidor {
 	public app: express.Application;
 	public port: string;
 	public v1: string = "/api/v1/public";
-	public swaggerDocument = YAML.load("./api.yml");
+	// public swaggerDocument = YAML.load("./api.yml");
 
 	constructor() {
 		this.app = express();
@@ -95,7 +95,7 @@ class Servidor {
 		this.app.use(`${this.v1}/perfiles`, seguridad.revisar, rutasPerfil);
 
 		// documentación
-		this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
+		// this.app.use(`${this.v1}/docs`,swaggerUi.serve, swaggerUi.setup(this.swaggerDocument));
 	}
 
 	public arrancar(): void {

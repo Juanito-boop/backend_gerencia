@@ -17,6 +17,8 @@ class Rutas {
 		this.rutasApi.post("/", lugaresController.insertLugar);
     this.rutasApi.get("/", lugaresController.getAllLugares);
 		this.rutasApi.get("/:nombreLugar", lugaresController.getLugar);
+		this.rutasApi.put("/:id_lugar", lugaresController.updateLugar);
+		this.rutasApi.delete("/:id_lugar", lugaresController.deleteLugar);
 	}
 }
 

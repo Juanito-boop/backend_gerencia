@@ -19,6 +19,8 @@ class Rutas {
 		this.rutasApi.post("/", EventoController.insertEvent);
 		this.rutasApi.get("/", EventoController.fetchAllEvents);
 		this.rutasApi.get("/:id_evento", EventoController.fetchEvent);
+		this.rutasApi.put("/:id_evento", EventoController.updateEvent);
+		this.rutasApi.delete("/:id_evento", EventoController.deleteEvent);
 	}
 }
 

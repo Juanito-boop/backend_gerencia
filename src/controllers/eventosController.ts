@@ -5,30 +5,22 @@ import { Event, EventoCreationResult } from "../interface/interfazEvento";
 
 class eventosController {
 	public async insertEvent(req: Request, res: Response) {
-		const {
-			nombre_evento,
-			descripcion_evento,
-			organizador_evento,
-			lugar_evento,
-			fecha_evento,
-			hora_evento,
-			valor_evento,
-			id_usuario,
-			id_lugar
-		} = req.body;
+		const { nombre_evento, descripcion_evento, organizador_evento, lugar_evento, fecha_evento, hora_evento, valor_evento, id_usuario, id_lugar, fecha_finalizacion, hora_finalizacion } = req.body;
 		console.log(req.body);
 
 		// Validación de tipos de datos
 		const fieldsToValidate = [
-			{ name: "nombre_evento"     , value: nombre_evento     , type: "string" },
+			{ name: "nombre_evento", value: nombre_evento, type: "string" },
 			{ name: "descripcion_evento", value: descripcion_evento, type: "string" },
 			{ name: "organizador_evento", value: organizador_evento, type: "string" },
-			{ name: "lugar_evento"      , value: lugar_evento      , type: "string" },
-			{ name: "fecha_evento"      , value: fecha_evento      , type: "string" },
-			{ name: "hora_evento"       , value: hora_evento       , type: "string" },
-			{ name: "valor_evento"      , value: valor_evento      , type: "number" },
-			{ name: "id_usuario"        , value: id_usuario        , type: "string" },
-			{ name: "id_lugar"          , value: id_lugar          , type: "string" },
+			{ name: "lugar_evento", value: lugar_evento, type: "string" },
+			{ name: "fecha_evento", value: fecha_evento, type: "string" },
+			{ name: "hora_evento", value: hora_evento, type: "string" },
+			{ name: "valor_evento", value: valor_evento, type: "number" },
+			{ name: "id_usuario", value: id_usuario, type: "string" },
+			{ name: "id_lugar", value: id_lugar, type: "string" },
+			{ name: "fecha_finalizacion", value: fecha_finalizacion, type: "string" },
+			{ name: "hora_finalizacion", value: hora_finalizacion, type: "string" },
 		];
 
 		const invalidField = fieldsToValidate.find(
@@ -44,20 +36,9 @@ class eventosController {
 		}
 
 		try {
-			const data = {
-				nombre_evento,
-				descripcion_evento,
-				organizador_evento,
-				lugar_evento,
-				fecha_evento,
-				hora_evento,
-				valor_evento,
-				id_usuario,
-				id_lugar
-			};
+			const data = { nombre_evento, descripcion_evento, organizador_evento, lugar_evento, fecha_evento, hora_evento, valor_evento, id_usuario, id_lugar, fecha_finalizacion, hora_finalizacion };
 
-			const result: Result<EventoCreationResult, string> =
-				await eventoDAO.createEvent(data);
+			const result: Result<EventoCreationResult, string> = await eventoDAO.createEvent(data);
 			if (result.isSuccess) {
 				return res.status(200).json(result.getValue());
 			} else {
@@ -102,6 +83,48 @@ class eventosController {
 			return res
 				.status(500)
 				.json(`Error al obtener los eventos: ${error.message}`);
+		}
+	}
+
+	public async updateEvent(req: Request, res: Response) {
+		const id_evento = parseInt(req.params.id_evento);
+
+		if (isNaN(id_evento)) {
+			return res.status(400).json({ error: "El id_evento debe ser un número válido." });
+		}
+
+		try {
+			const eventoData = req.body;
+			const eventoActualizado = await eventoDAO.updateEvent(id_evento, eventoData);
+			
+			if (eventoActualizado.isSuccess) {
+				return res.status(200).json(eventoActualizado.getValue());
+			} else {
+				return res.status(400).json({ error: eventoActualizado.errorValue() });
+			}
+		} catch (error: any) {
+			console.error(`Error al actualizar el evento: ${error.message}`);
+			return res.status(500).json({ error: "Error al actualizar el evento" });
+		}
+	}
+
+	public async deleteEvent(req: Request, res: Response) {
+		const id_evento = parseInt(req.params.id_evento);
+
+		if (isNaN(id_evento)) {
+			return res.status(400).json({ error: "El id_evento debe ser un número válido." });
+		}
+
+		try {
+			const result = await eventoDAO.deleteEvent(id_evento);
+			if (result.isSuccess) {
+				return res.status(200).json(result.getValue());
+			} else {
+				return res.status(400).json({ error: result.errorValue() });
+			}
+		} catch (error: any) {
+			console.error(`Error al eliminar el evento: ${error.message}`);
+			return res.status(500).json({ error: "Error al eliminar el evento" });
 		}
 	}
 }
