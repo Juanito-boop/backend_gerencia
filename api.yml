@@ -1,0 +1,223 @@
+openapi: 3.0.0
+
+info:
+  title: API de Gestión de Usuarios
+  version: '1.0'
+tags:
+  - name: public
+    description: Rutas públicas
+  - name: private
+    description: Rutas privadas
+
+paths:
+  /crearUsuario:
+    post:
+      operationId: crearUsuario
+      tags:
+        - public
+      summary: Añadir un nuevo usuario
+      servers:
+        - url: http://localhost:8088/api/v1/public
+          description: Rutas públicas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+            example:
+              nombre: "John"
+              apellido: "Doe"
+              email: "john@example.com"
+              username: "johndoe"
+              password: "password123"
+              avatar_url: "http://example.com/avatar.jpg"
+              rol: "administrador | usuario | establecimiento | proveedor"
+      responses:
+        '200':
+          description: Usuario creado exitosamente
+          content:
+            application/json: 
+              example:
+                user_id: "acde070d-8c4c-4f0d-9d8a-162843c10333"
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              example:
+                messages:
+                  - "El usuario ya existe"
+                  - "El rol no es válido"
+                  - "Todos los campos son obligatorios"
+                  - "Para crear el usuario se necesitan estos campos"
+                  - 
+                    - "nombre"
+                    - "apellido"
+                    - "email"
+                    - "username"
+                    - "password"
+                    - "avatar_url"
+                    - "rol"
+  
+  /token:
+    post:
+      operationId: generarToken
+      tags:
+        - public
+      summary: Generar un token de autenticación
+      servers:
+        - url: http://localhost:8088/api/v1/public
+          description: Rutas públicas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Token'
+            example:
+              username: user_example
+              password: password_example
+      responses:
+        '200':
+          description: Token generado exitosamente
+          content:
+            application/json:
+              schema:
+                type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        '401':
+          description: Credenciales inválidas
+        
+  /crearUsuario/bulk:
+    post:
+      operationId: crearUsuariosEnBloque
+      tags:
+        - private
+      summary: Crear usuarios en bloque
+      servers:
+          - url: http://localhost:8088/api/v1/private
+            description: Rutas privadas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Usuario'
+            example:
+              - nombre: "Jane"
+                apellido: "Doe"
+                email: "jane@example.com"
+                username: "janedoe"
+                password: "password123"
+                avatar_url: "http://example.com/avatar.jpg"
+                rol: "administrador | usuario | establecimiento | proveedor"
+              - nombre: "Mike"
+                apellido: "Smith"
+                email: "mike@example.com"
+                username: "mikesmith"
+                password: "password123"
+                avatar_url: "http://example.com/avatar2.jpg"
+                rol: "administrador | usuario | establecimiento | proveedor"
+      responses:
+        '200':
+          description: Usuarios creados exitosamente
+          content:
+            application/json:
+              example:
+                message: "Usuarios creados correctamente"
+        '400':
+          description: Solicitud incorrecta
+          content:
+            application/json:
+              example:
+                messages:
+                  - "Error en la creación de usuarios en bloque"
+
+  /usuarios/{username}:
+    get:
+      operationId: obtenerUsuarioPorUsername
+      tags:
+        - public
+      summary: Obtener un usuario por nombre de usuario
+      servers:
+        - url: http://localhost:8088/api/v1/public
+          description: Rutas públicas
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Obtiene un unico usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+              example:
+                nombre: John
+                apellido: Doe
+                email: john@example.com
+                username: johndoe
+                password: password123
+                avatar_url: http://example.com/avatar.jpg
+                rol: administrador
+        '401':
+          description: Usuario no autorizado
+    
+    delete:
+      operationId: eliminarUsuarioPorUsername
+      tags:
+        - public
+      summary: Eliminar un usuario por nombre de usuario
+      servers:
+        - url: http://localhost:8088/api/v1/public
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Usuario eliminado
+        '401':
+          description: Usuario no autorizado
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        nombre:
+          type: string
+        apellido:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        avatar_url:
+          type: string
+        rol:
+          type: string
+          
+    Token:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
